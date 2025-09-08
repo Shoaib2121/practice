@@ -1,5 +1,5 @@
 const express = require("express");
-const axios = require("axios"); // for making requests
+const axios = require("axios");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -7,7 +7,7 @@ app.use(express.json());
 
 let lastItemData = null;
 
-// Replace with your actual Suitelet URL
+// Suitelet URL
 const NETSUITE_SUITELET_URL =
   "https://td3032620.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=92&deploy=1&compid=TD3032620&ns-at=AAEJ7tMQrn10xDgPNQbaSVdrZPPttonuFVrZ-x9Vk7bkgB24yKU";
 
@@ -18,11 +18,13 @@ app.post("/api/shopify/update-item", async (req, res) => {
   lastItemData = item;
 
   try {
-    // Forward the data to NetSuite Suitelet
-    const nsResponse = await axios.post(NETSUITE_SUITELET_URL, item, {
+    // ✅ Wrap item inside "order" object
+    const payload = { order: item };
+
+    const nsResponse = await axios.post(NETSUITE_SUITELET_URL, payload, {
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0", // ✅ you said you want Mozilla/5.0
+        "User-Agent": "Mozilla/5.0",
       },
     });
 
